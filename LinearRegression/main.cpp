@@ -66,7 +66,7 @@ void FoodDeliveryTimePrediction()
     // Парсим и загружаем датасет
 
     ifstream file; 
-    file.open("Food_Delivery_Times_for_regression.csv");
+    file.open("data\\Food_Delivery_Times_for_regression.csv");
     
     if ( file.is_open() ) 
     {
