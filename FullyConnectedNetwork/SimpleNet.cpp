@@ -4,10 +4,10 @@
 #include <string>
 #include <random>
 #include <vector>
-#include "Matrix.cpp"
-#include "FullyConnectedLayer.cpp"
-#include "ActivationLayer.cpp"
-#include "SoftmaxLayer.cpp"
+#include "NetworkLayers/Matrix.cpp"
+#include "NetworkLayers/FullyConnectedLayer.cpp"
+#include "NetworkLayers/ActivationLayer.cpp"
+#include "NetworkLayers/SoftmaxLayer.cpp"
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

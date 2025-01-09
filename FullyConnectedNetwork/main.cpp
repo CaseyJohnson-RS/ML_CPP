@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 
-#include "Matrix.cpp"
+#include "NetworkLayers/Matrix.cpp"
 #include "SimpleNet.cpp"
 
 
