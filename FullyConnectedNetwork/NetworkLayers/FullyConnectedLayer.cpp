@@ -156,10 +156,6 @@ public:
                     Обрати внимание, что под grad понимается градиент, пришедший на нейрон,
                     Которому принадлежит w_i
                 */
-                double delta_w_i = gradFromNextLayer[neuron_index][0] * X[input_index][0];
-
-                // Меняем веса на текущем слое
-                W[neuron_index][input_index] -= delta_w_i * learning_rate;
 
                 /*
                     Считаем градиент для предыдущего слоя
@@ -169,7 +165,10 @@ public:
                     Для каждого входа слоя необходимо сосчитать сумму градиентов весов, 
                     Которые были применены к данному входу
                 */
-                gradFromCurrLayer[input_index][0] += delta_w_i;
+                gradFromCurrLayer[input_index][0] += gradFromNextLayer[neuron_index][0] * W[neuron_index][input_index];
+
+                // Меняем веса на текущем слое
+                W[neuron_index][input_index] -= gradFromNextLayer[neuron_index][0] * X[input_index][0] * learning_rate;
             }
 
             /*
