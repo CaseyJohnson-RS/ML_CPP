@@ -2,7 +2,7 @@
 #define SOFTMAX_LAYER
 
 #include <cmath>
-#include "Matrix.cpp"
+#include "../Tensor.cpp"
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,62 +33,63 @@ public:
 
     SoftmaxLayer(){}
 
-    Matrix Forward(Matrix X)
+    Tensor Forward(const Tensor& X)
     {
-        if(X.getW() != 1)
+        if(X.get_depth() != 1 || X.get_width() != 1)
         {
             std::cout << "Input X must be vertical vector!" << std::endl;
             throw;
         }
 
-        Matrix Y = Matrix(X.getH(), 1);
+        Tensor Y = Tensor(1, X.get_height(), 1);
 
         double S = 0;
 
-        for(unsigned int i = 0; i < X.getH(); ++i)
-            S += std::exp(X[i][0]);
+        for(unsigned int i = 0; i < X.get_height(); ++i)
+            S += std::exp(X(0, i, 0));
         
-        for(unsigned int i = 0; i < X.getH(); ++i)
-            Y[i][0] = std::exp(X[i][0]) / S;
+        for(unsigned int i = 0; i < X.get_height(); ++i)
+            Y[0][i][0] = std::exp(X(0, i, 0)) / S;
         
         return Y;
     }
 
-    Matrix Backward(Matrix X, Matrix gradFromNextLayer)
+
+    Tensor Backward(const Tensor& X, const Tensor& GFNL)
     {
-        Matrix Y = Matrix(X.getH(), 1);
+        Tensor Y = Tensor(1, X.get_height(), 1);
         {
             double S = 0;
 
-            for(unsigned int i = 0; i < X.getH(); ++i)
-                S += std::exp(X[i][0]);
+            for(unsigned int i = 0; i < X.get_height(); ++i)
+                S += std::exp(X(0, i, 0));
             
-            for(unsigned int i = 0; i < X.getH(); ++i)
-                Y[i][0] = std::exp(X[i][0]) / S;
+            for(unsigned int i = 0; i < X.get_height(); ++i)
+                Y[0][i][0] = std::exp(X(0, i, 0)) / S;
         }        
 
-        Matrix J = Matrix(X.getH(), X.getH());
-        for(unsigned int i = 0; i < X.getH(); ++i)
+        Tensor J = Tensor(1, X.get_height(), X.get_height());
+        for(unsigned int i = 0; i < X.get_height(); ++i)
         {
-            for(unsigned int j = 0; j < X.getH(); ++j)
+            for(unsigned int j = 0; j < X.get_height(); ++j)
             {
                 if (i == j)
-                    J[i][j] = Y[i][0] * (1 - Y[i][0]);
+                    J[0][i][j] = Y(0, i, 0) * (1 - Y(0, i, 0));
                 else
-                    J[i][j] = -Y[i][0] * Y[j][0];
+                    J[0][i][j] = -Y(0, i, 0) * Y(0, i, 0);
             }
         }
 
-        Matrix gradFromCurrLayer = Matrix(X.getH(), 1);
-        for(unsigned int i = 0; i < X.getH(); ++i)
+        Tensor GFCL = Tensor(1, X.get_height(), 1);
+        for(unsigned int i = 0; i < X.get_height(); ++i)
         {
-            for(unsigned int j = 0; j < X.getH(); ++j)
+            for(unsigned int j = 0; j < X.get_height(); ++j)
             {
-                gradFromCurrLayer[i][0] += gradFromNextLayer[j][0] * J[j][i];
+                GFCL[0][i][0] += GFNL(0, j, 0) * J(0, j, i);
             }
         }
 
-        return gradFromCurrLayer;
+        return GFCL;
     }
 
 };

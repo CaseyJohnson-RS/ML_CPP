@@ -1,3 +1,9 @@
 **/*.exe
 **/.vscode
 **/.ipynb_checkpoints
+**/*.pdb
+FullyConnectedNetwork/Models
+FullyConnectedNetwork/Predict.cpp
+CNN/data
+CNN/Models
+CNN/Predict.cpp
